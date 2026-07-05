@@ -27,6 +27,19 @@
                 <option value="qwen/qwen3-32b">qwen/qwen3-32b</option>
                 <option value="meta-llama/llama-4-scout-17b-16e-instruct">meta-llama/llama-4-scout-17b-16e-instruct</option>
             </optgroup>
+            <optgroup label="NVIDIA NIM">
+                <option value="nvidia/nemotron-3-ultra-550b-a55b">
+                    Nemotron 3 Ultra
+                </option>
+
+                <option value="deepseek-ai/deepseek-v4-flash">
+                    DeepSeek V4 Flash
+                </option>
+
+                <option value="deepseek-ai/deepseek-v4-pro">
+                    DeepSeek V4 Pro
+                </option>
+            </optgroup>
         </select>
         <button>전송</button>
     </form>

@@ -37,8 +37,9 @@ public class DefaultChatService implements ChatService {
     );
 
     private static final Set<String> NIM_MODELS = Set.of(
-            "nvidia/llama-3.1-nemotron-70b-instruct",
-            "deepseek-ai/deepseek-r1"
+            "nvidia/nemotron-3-ultra-550b-a55b",
+            "deepseek-ai/deepseek-v4-flash",
+            "deepseek-ai/deepseek-v4-pro"
     );
 
     @Override
