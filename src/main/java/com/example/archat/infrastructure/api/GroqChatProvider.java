@@ -19,6 +19,17 @@ public class GroqChatProvider implements ChatProvider {
     private static final URI DEFAULT_ENDPOINT =
             URI.create("https://api.groq.com/openai/v1/chat/completions");
     private static final Gson GSON = new Gson();
+    private static final String SYSTEM_PROMPT = """
+        친절한 말투로, 100자 이내로, 가능한 한글로 답변하세요.
+
+        절대로 추론 과정(thinking process, reasoning, chain of thought)을
+        출력하지 마세요.
+
+        오직 최종 답변만 출력하세요.
+        """;
+
+    private static final Message SYSTEM_MESSAGE =
+            new Message("system", SYSTEM_PROMPT);
 
     private final HttpClient httpClient;
     private final URI endpoint;
@@ -26,14 +37,22 @@ public class GroqChatProvider implements ChatProvider {
 
     @Override
     public String useAI(Chat chat) {
-        return requestCompletion(chat.model(), List.of(toMessage(chat)));
+        List<Message> messages = List.of(
+                SYSTEM_MESSAGE,
+                toMessage(chat)
+        );
+        return requestCompletion(chat.model(), messages);
     }
 
     @Override
     public String useAI(Chat newChat, List<Chat> chatHistory) {
-        List<Message> messages = chatHistory.stream()
-                .map(GroqChatProvider::toMessage)
-                .toList();
+        List<Message> messages = new java.util.ArrayList<>();
+        messages.add(SYSTEM_MESSAGE);
+        messages.addAll(
+                chatHistory.stream()
+                        .map(GroqChatProvider::toMessage)
+                        .toList()
+        );
         return requestCompletion(newChat.model(), messages);
     }
 
