@@ -110,7 +110,7 @@ public class NIMChatProvider implements ChatProvider {
 
     private void validateApiKey() {
         if (apiKey == null || apiKey.isBlank()) {
-            throw new IllegalStateException("GROQ_API_KEY 환경변수가 설정되지 않았습니다.");
+            throw new IllegalStateException("NVIDIA_API_KEY 환경변수가 설정되지 않았습니다.");
         }
     }
 
