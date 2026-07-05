@@ -84,7 +84,6 @@ public class NIMChatProvider implements ChatProvider {
             HttpResponse<String> response = httpClient.send(
                     request,
                     HttpResponse.BodyHandlers.ofString());
-
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
                 throw new IllegalStateException(extractError(response));
             }

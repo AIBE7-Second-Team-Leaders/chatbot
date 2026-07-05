@@ -31,10 +31,6 @@
                     Nemotron 3 Ultra
                 </option>
 
-                <option value="deepseek-ai/deepseek-v4-flash">
-                    DeepSeek V4 Flash
-                </option>
-
                 <option value="deepseek-ai/deepseek-v4-pro">
                     DeepSeek V4 Pro
                 </option>
