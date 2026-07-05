@@ -25,7 +25,6 @@
             </optgroup>
             <optgroup label="Groq - Preview">
                 <option value="qwen/qwen3-32b">qwen/qwen3-32b</option>
-                <option value="meta-llama/llama-4-scout-17b-16e-instruct">meta-llama/llama-4-scout-17b-16e-instruct</option>
             </optgroup>
             <optgroup label="NVIDIA NIM">
                 <option value="nvidia/nemotron-3-ultra-550b-a55b">
