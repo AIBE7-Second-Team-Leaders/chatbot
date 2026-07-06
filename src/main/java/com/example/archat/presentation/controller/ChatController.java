@@ -31,12 +31,16 @@ public class ChatController extends BaseController {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // 접속 -> /chat
-        // 데이터 불러오기
-        HttpSession session = req.getSession(); // 세션 생성/불러오기 -> 유저를 구분
-//        List<ChatResponseDTO> response = chatService.readHistory(session.getId())
-        List<ChatResponseDTO> response = chatService.findAllByUserId(session.getId())
-                // Stream -> map -> of(변환) -> jsp에서 최종적으로 만나게 되는...
+
+        /// 로그인 진행하지 않는다면 무조건 index page로 돌아감
+        String loginUserId = getLoginUserId(req);
+
+        if (loginUserId == null) {
+            resp.sendRedirect(req.getContextPath() + "/");
+            return;
+        }
+
+        List<ChatResponseDTO> response = chatService.findAllByUserId(loginUserId)
                 .stream()
                 .map(ChatResponseDTO::of)
                 .toList();
@@ -55,15 +59,34 @@ public class ChatController extends BaseController {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String loginUserId = getLoginUserId(req);
+
+        if (loginUserId == null) {
+            resp.sendRedirect(req.getContextPath() + "/");
+            return;
+        }
+
         Chat chat = new Chat(
                 req.getParameter("message"),
                 "USER",
-                req.getSession().getId(),
+                loginUserId,
                 req.getParameter("model"),
                 ZonedDateTime.now().toString()
         );
-//        chatService.sendMessage(chat);
+
         chatService.save(chat);
         resp.sendRedirect("%s/%s".formatted(req.getContextPath(), "chat"));
+    }
+
+    /// 사용자 ID 획득
+    private String getLoginUserId(HttpServletRequest req) {
+        HttpSession session = req.getSession(false);
+
+        if (session == null) {
+            return null;
+        }
+
+        return (String) session.getAttribute("loginUserId");
     }
 }
