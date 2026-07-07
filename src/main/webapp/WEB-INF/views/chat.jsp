@@ -9,7 +9,7 @@
 <body>
 <header>
     <h1>Archat</h1>
-    <form action="<c:url value="/auth/logout"/>" method="post">
+    <form id="logoutForm" action="<c:url value="/auth/logout"/>" method="post">
         <button type="submit">로그아웃</button>
     </form>
 </header>
@@ -60,5 +60,6 @@
         </div>
     </c:forEach>
 </section>
+<script type="module" src="${pageContext.request.contextPath}/js/logout.js?v=1"></script>
 </body>
 </html>
