@@ -3,13 +3,24 @@
 <html>
 <head>
     <title>ArChat</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=1">
 </head>
 <body>
-<h1>ArChat</h1>
-<p>로그인 후 챗봇을 사용할 수 있습니다.</p>
+<main class="auth-page">
+    <section class="auth-card">
+        <div class="auth-brand">
+            <div class="auth-brand-mark">AR</div>
+            <h1>ArChat</h1>
+        </div>
 
-<button type="button" id="openLoginModal">로그인</button>
-<button type="button" id="openSignupModal">회원가입</button>
+        <p>로그인 후 AI 모델을 선택하고 대화를 시작할 수 있습니다.</p>
+
+        <div class="auth-actions">
+            <button id="openLoginModal" type="button">로그인</button>
+            <button id="openSignupModal" type="button" class="button-secondary">회원가입</button>
+        </div>
+    </section>
+</main>
 
 <dialog id="loginModal">
     <form id="loginForm">
@@ -27,8 +38,8 @@
             <input type="password" id="loginPassword" required>
         </div>
 
-        <div>
-            <button type="button" id="closeLoginModal">닫기</button>
+        <div class="dialog-actions">
+            <button type="button" id="closeLoginModal" class="button-secondary">닫기</button>
             <button type="submit">로그인</button>
         </div>
     </form>
@@ -50,8 +61,8 @@
             <input type="password" id="signupPassword" required>
         </div>
 
-        <div>
-            <button type="button" id="closeSignupModal">닫기</button>
+        <div class="dialog-actions">
+            <button type="button" id="closeSignupModal" class="button-secondary">닫기</button>
             <button type="submit">회원가입</button>
         </div>
     </form>

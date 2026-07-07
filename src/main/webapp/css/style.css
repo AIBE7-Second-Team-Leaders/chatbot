@@ -1,0 +1,216 @@
+:root {
+    --bg: #f7f7f8;
+    --panel: #ffffff;
+    --panel-soft: #fbfbfc;
+    --line: #e7e7ea;
+    --line-strong: #dcdce1;
+    --text: #161616;
+    --muted: #6e6e73;
+    --hover: #f1f1f3;
+    --danger: #c83d3d;
+    --success: #168a4a;
+
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+
+    --shadow-card: 0 20px 60px rgba(0, 0, 0, 0.06);
+    --shadow-dialog: 0 24px 80px rgba(0, 0, 0, 0.16);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", "Malgun Gothic", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+/* index / login page */
+
+.auth-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 32px;
+}
+
+.auth-card {
+    width: min(460px, 100%);
+    padding: 36px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--panel);
+    box-shadow: var(--shadow-card);
+}
+
+.auth-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.auth-brand-mark {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    background: #111111;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.auth-card h1 {
+    margin: 0;
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+
+.auth-card p {
+    margin: 0 0 28px;
+    color: var(--muted);
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.auth-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.auth-actions button {
+    flex: 1;
+}
+
+/* buttons */
+
+button {
+    border: 0;
+    border-radius: 999px;
+    padding: 10px 16px;
+    background: #111111;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #2a2a2a;
+}
+
+.button-secondary {
+    border: 1px solid var(--line);
+    background: #ffffff;
+    color: var(--text);
+}
+
+.button-secondary:hover {
+    background: var(--hover);
+}
+
+/* dialog */
+
+dialog {
+    width: min(420px, calc(100% - 32px));
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 0;
+    background: var(--panel);
+    box-shadow: var(--shadow-dialog);
+}
+
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.38);
+}
+
+dialog form {
+    padding: 30px;
+}
+
+dialog h2 {
+    margin: 0 0 20px;
+    font-size: 1.35rem;
+    letter-spacing: -0.03em;
+}
+
+dialog form > div {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 14px;
+}
+
+dialog label {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+dialog input {
+    width: 100%;
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    padding: 11px 12px;
+    color: var(--text);
+    background: #ffffff;
+}
+
+dialog input:focus {
+    outline: none;
+    border-color: #111111;
+    box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+#loginMessage,
+#signupMessage {
+    min-height: 22px;
+    margin: 0 0 16px;
+    color: var(--danger);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+#signupMessage.success,
+#loginMessage.success {
+    color: var(--success);
+}
+
+/* mobile */
+
+@media (max-width: 560px) {
+    .auth-page {
+        padding: 20px;
+    }
+
+    .auth-card {
+        padding: 28px;
+    }
+
+    .auth-actions {
+        flex-direction: column;
+    }
+
+    dialog form {
+        padding: 24px;
+    }
+}
