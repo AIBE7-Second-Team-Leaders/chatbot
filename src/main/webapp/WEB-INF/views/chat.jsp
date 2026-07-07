@@ -32,10 +32,47 @@
     </style>
 </head>
 <body>
-<c:set var="activeTitle" value="New chat" />
-<c:forEach var="conversation" items="${conversations}">
-    <c:if test="${conversation.conversationId eq activeConversationId}">
-        <c:set var="activeTitle" value="${conversation.title}" />
+<header>
+    <h1>Archat</h1>
+    <form id="logoutForm" action="<c:url value="/auth/logout"/>" method="post">
+        <button type="submit">로그아웃</button>
+    </form>
+</header>
+
+<form action="<c:url value="/chat"/>" method="post">
+    <input name="message" placeholder="메시지를 입력하세요"/>
+    <select name="model">
+        <optgroup label="Google AI">
+            <option value="gemma-4-26b-a4b-it">gemma-4-26b-a4b-it</option>
+            <option value="gemma-4-31b-it">gemma-4-31b-it</option>
+            <option value="gemini-3.1-flash-lite">gemini-3.1-flash-lite</option>
+        </optgroup>
+        <optgroup label="Groq - Production">
+            <option value="openai/gpt-oss-20b">openai/gpt-oss-20b</option>
+            <option value="openai/gpt-oss-120b">openai/gpt-oss-120b</option>
+            <option value="llama-3.1-8b-instant">llama-3.1-8b-instant</option>
+            <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option>
+            <option value="groq/compound-mini">groq/compound-mini</option>
+            <option value="groq/compound">groq/compound</option>
+        </optgroup>
+        <optgroup label="Groq - Preview">
+            <option value="qwen/qwen3-32b">qwen/qwen3-32b</option>
+        </optgroup>
+        <optgroup label="NVIDIA NIM">
+            <option value="nvidia/nemotron-3-ultra-550b-a55b">
+                Nemotron 3 Ultra
+            </option>
+
+            <option value="deepseek-ai/deepseek-v4-pro">
+                DeepSeek V4 Pro
+            </option>
+        </optgroup>
+    </select>
+    <button>전송</button>
+</form>
+<section>
+    <c:if test="${empty chats}">
+        <p>아직 채팅이 없습니다</p>
     </c:if>
 </c:forEach>
 <div class="app">
@@ -81,84 +118,8 @@
                 </c:otherwise>
             </c:choose>
         </div>
-    </aside>
-    <main class="main">
-        <header class="header">
-            <div class="header-title"><h1>${activeTitle}</h1><p>Conversation list and message history stay separated.</p></div>
-            <div class="header-badge">Supabase conversations</div>
-        </header>
-        <section class="messages" id="messages">
-            <c:choose>
-                <c:when test="${empty chats}">
-                    <div class="empty"><h2>What can I help with?</h2><p>This screen is wired for conversation-based storage. Send a first message to create a new chat and show it in the left sidebar.</p></div>
-                </c:when>
-                <c:otherwise>
-                    <c:forEach var="chat" items="${chats}">
-                        <article class="message ${chat.owner eq 'USER' ? 'user' : 'assistant'}">
-                            <div class="message-meta"><strong>${chat.owner eq 'USER' ? 'You' : 'ArChat'}</strong><span>${chat.model} | ${chat.timestamp}</span></div>
-                            <div class="message-body">${chat.message}</div>
-                        </article>
-                    </c:forEach>
-                </c:otherwise>
-            </c:choose>
-        </section>
-        <div class="composer-wrap">
-            <div class="composer">
-                <form class="composer-form" action="<c:url value='/chat'/>" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="conversationId" value="${activeConversationId}">
-                    <div class="composer-main"><textarea id="message" name="message" placeholder="Type your message" required></textarea></div>
-                    <div class="attachments" id="attachmentPreview"></div>
-                    <div class="composer-bar">
-                        <div class="composer-left">
-                            <label class="attach-button" for="attachmentInput"><span>+</span><span>Add files</span><input id="attachmentInput" type="file" name="attachments" multiple accept="image/*,.pdf,.txt,.doc,.docx,.ppt,.pptx,.xls,.xlsx"></label>
-                            <span class="helper-text">Uploaded files are saved with attachment metadata.</span>
-                        </div>
-                        <div class="composer-right">
-                            <select name="model">
-                                <optgroup label="Google AI"><option value="gemma-4-26b-a4b-it">gemma-4-26b-a4b-it</option><option value="gemma-4-31b-it">gemma-4-31b-it</option><option value="gemini-3.1-flash-lite">gemini-3.1-flash-lite</option></optgroup>
-                                <optgroup label="Groq"><option value="openai/gpt-oss-20b">openai/gpt-oss-20b</option><option value="openai/gpt-oss-120b">openai/gpt-oss-120b</option><option value="llama-3.1-8b-instant">llama-3.1-8b-instant</option><option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option><option value="groq/compound-mini">groq/compound-mini</option><option value="groq/compound">groq/compound</option><option value="qwen/qwen3-32b">qwen/qwen3-32b</option></optgroup>
-                                <optgroup label="NVIDIA NIM"><option value="nvidia/nemotron-3-ultra-550b-a55b">nvidia/nemotron-3-ultra-550b-a55b</option><option value="deepseek-ai/deepseek-v4-pro">deepseek-ai/deepseek-v4-pro</option></optgroup>
-                            </select>
-                            <button class="send-button" type="submit">Send</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </main>
-</div>
-<script>
-    (function () {
-        const attachmentInput = document.getElementById("attachmentInput");
-        const attachmentPreview = document.getElementById("attachmentPreview");
-        const messages = document.getElementById("messages");
-        function renderFiles(files) {
-            attachmentPreview.innerHTML = "";
-            if (!files || files.length === 0) return;
-            Array.from(files).forEach(function (file) {
-                const chip = document.createElement("div");
-                chip.className = "attachment-chip";
-                chip.textContent = file.name;
-                attachmentPreview.appendChild(chip);
-            });
-        }
-        attachmentInput.addEventListener("change", function (event) { renderFiles(event.target.files); });
-        document.querySelectorAll("[data-rename-target]").forEach(function (button) {
-            button.addEventListener("click", function () {
-                const form = document.getElementById(button.dataset.renameTarget);
-                form.classList.toggle("active");
-                const input = form.querySelector("input[name='title']");
-                if (form.classList.contains("active")) { input.focus(); input.select(); }
-            });
-        });
-        document.querySelectorAll("[data-close-rename]").forEach(function (button) {
-            button.addEventListener("click", function () {
-                const form = document.getElementById(button.dataset.closeRename);
-                form.classList.remove("active");
-            });
-        });
-        messages.scrollTop = messages.scrollHeight;
-    })();
-</script>
+    </c:forEach>
+</section>
+<script type="module" src="${pageContext.request.contextPath}/js/logout.js?v=1"></script>
 </body>
 </html>
