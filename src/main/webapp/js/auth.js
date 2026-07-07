@@ -17,12 +17,57 @@ const closeSignupModalButton = document.querySelector("#closeSignupModal");
 const loginForm = document.querySelector("#loginForm");
 const signupForm = document.querySelector("#signupForm");
 
+const loginMessage = document.querySelector("#loginMessage");
+const signupMessage = document.querySelector("#signupMessage");
+
+function showMessage(messageElement, message) {
+    messageElement.textContent = message;
+}
+
+function clearMessage(messageElement) {
+    messageElement.textContent = "";
+}
+
 function resetLoginForm() {
     loginForm.reset();
+    clearMessage(loginMessage);
 }
 
 function resetSignupForm() {
     signupForm.reset();
+    clearMessage(signupMessage);
+}
+
+function getLoginErrorMessage(error) {
+    const message = error.message.toLowerCase();
+
+    if (message.includes("invalid login credentials")) {
+        return "이메일 또는 비밀번호가 올바르지 않습니다.";
+    }
+
+    if (message.includes("email not confirmed")) {
+        return "이메일 인증이 아직 완료되지 않았습니다.";
+    }
+
+    return "로그인에 실패하였습니다. 입력 정보를 다시 확인해 주십시오.";
+}
+
+function getSignupErrorMessage(error) {
+    const message = error.message.toLowerCase();
+
+    if (message.includes("already registered") || message.includes("already exists")) {
+        return "이미 가입된 이메일입니다.";
+    }
+
+    if (message.includes("password")) {
+        return "비밀번호 조건을 다시 확인해 주십시오.";
+    }
+
+    if (message.includes("email")) {
+        return "이메일 형식을 다시 확인해 주십시오.";
+    }
+
+    return "회원가입에 실패했습니다. 잠시 후 다시 시도해 주십시오.";
 }
 
 openLoginModalButton.addEventListener("click", () => {
@@ -64,13 +109,13 @@ loginForm.addEventListener("submit", async (event) => {
     });
 
     if (error) {
-        alert(error.message);
+        showMessage(loginMessage, getLoginErrorMessage(error));
         return;
     }
 
     if (!data.session || !data.session.access_token) {
         console.log("Supabase login data:", data);
-        alert("Supabase 로그인 세션을 가져오지 못했어.");
+        showMessage(loginMessage, "Supabase 로그인 세션을 가져오지 못했습니다.");
         return;
     }
 
@@ -94,8 +139,6 @@ loginForm.addEventListener("submit", async (event) => {
         return;
     }
 
-    alert("로그인 성공!");
-
     const chatUrl = `${window.APP_CONTEXT_PATH || ""}/chat`;
     location.href = chatUrl;
 });
@@ -113,12 +156,11 @@ signupForm.addEventListener("submit", async (event) => {
     });
 
     if (error) {
-        alert(error.message);
+        showMessage(signupMessage, getSignupErrorMessage(error));
         return;
     }
 
     console.log("회원가입 성공:", data);
-    alert("회원가입 성공! 이메일 인증 설정이 켜져 있다면 메일 인증 후 로그인하면 돼.");
-
-    signupModal.close();
+    showMessage(signupMessage, "회원가입이 완료되었습니다. 로그인을 해주세요.");
+    signupForm.reset();
 });

@@ -15,6 +15,8 @@
     <form id="loginForm">
         <h2>로그인</h2>
 
+        <p id="loginMessage" role="alert"></p>
+
         <div>
             <label for="loginEmail">이메일</label>
             <input type="email" id="loginEmail" required>
@@ -35,6 +37,8 @@
 <dialog id="signupModal">
     <form id="signupForm">
         <h2>회원가입</h2>
+
+        <p id="signupMessage" role="alert"></p>
 
         <div>
             <label for="signupEmail">이메일</label>
